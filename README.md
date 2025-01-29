@@ -1,3 +1,3 @@
-# Remote Operation Info Display
+# Simulated Remote Operation
 
-ROS2 python node which displays information - images - based on the state of remote operation
+ROS2 python node which displays the vehicles position and surrounding lanes. 
