@@ -32,8 +32,8 @@ class SimulatedRemoteOperatorNode(Node):
         # self.publisher_ = self.create_publisher(VehicleStateDynamic, 'vehicle_state/dynamic', 10)
         self.timer = self.create_timer(0.002, self.run)
 
-        # self.remote_operations_state = RemoteOperationStates.ListeningForAssistanceRequests
-        self.remote_operations_state = RemoteOperationStates.CreatingWaypoints # Debug state
+        self.remote_operations_state = RemoteOperationStates.ListeningForAssistanceRequests
+        # self.remote_operations_state = RemoteOperationStates.CreatingWaypoints # Debug state
         
         self.latest_vehicle_state_dynamic = None
         self.has_received_a_vehicle_state_dynamic = False
@@ -53,13 +53,13 @@ class SimulatedRemoteOperatorNode(Node):
 
         self.waypoint_publisher = self.create_publisher(
                                                         Waypoints,
-                                                        "topic_to_be_decided_2",
+                                                        "remote_operation_waypoints",
                                                         10
                                                         )
 
         self.trajectory_approval_publisher = self.create_publisher(
                                                                  Bool,
-                                                                 "topic_to_be_decided_4",
+                                                                 "suggested_trajecory_accepted",
                                                                  10
                                                                  )
                 
@@ -77,13 +77,13 @@ class SimulatedRemoteOperatorNode(Node):
 
         self.assitance_request_subscriber = self.create_subscription(
                                                                     AssistanceRequest,
-                                                                    'topic_to_be_decided_1',
+                                                                    'request_assistance',
                                                                     self.assistance_request_callback,
                                                                     10)
 
         self.trajectory_subscriber = self.create_subscription(
                                                             Trajectory,
-                                                            "topic_to_be_decided_3",
+                                                            "trajectory_suggestion",
                                                             self.trajectory_callback,
                                                             10)
 
@@ -129,6 +129,7 @@ class SimulatedRemoteOperatorNode(Node):
 
         approval_msg = Bool()
         approval_msg.data = approved_or_not
+        self.trajectory_approval_publisher.publish(approval_msg)
             
     def vehicle_state_dynamic_callback(self, msg):
         if ( self.has_received_a_vehicle_state_dynamic == False ):
@@ -149,8 +150,14 @@ class SimulatedRemoteOperatorNode(Node):
 
     def assistance_request_callback(self, msg):
 
+        print("assistance request")
+
         if ( self.has_received_a_new_assistance_request == True ):
             return
+        
+        if ( self.remote_operations_state is not RemoteOperationStates.ListeningForAssistanceRequests ):
+            return
+
 
         if (self.has_received_a_new_assistance_request == False):
             self.has_received_a_new_assistance_request = True
