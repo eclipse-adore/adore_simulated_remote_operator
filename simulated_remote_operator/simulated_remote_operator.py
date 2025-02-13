@@ -59,7 +59,7 @@ class SimulatedRemoteOperatorNode(Node):
 
         self.trajectory_approval_publisher = self.create_publisher(
                                                                  Bool,
-                                                                 "suggested_trajecory_accepted",
+                                                                 "suggested_trajectory_accepted",
                                                                  10
                                                                  )
                 
