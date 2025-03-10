@@ -59,7 +59,7 @@ class SimulatedRemoteOperatorNode(Node):
 
         self.trajectory_approval_publisher = self.create_publisher(
                                                                  Bool,
-                                                                 "suggested_trajecory_accepted",
+                                                                 "suggested_trajectory_accepted",
                                                                  10
                                                                  )
                 
@@ -422,7 +422,8 @@ def visualize_approval_buttons(remote_operator_node):
     if ( rl.check_collision_point_rec(rl.get_mouse_position(), reject_trajectory_button_rect) and rl.is_mouse_button_pressed(rl.MOUSE_LEFT_BUTTON)):
         reject_trajectory_button_color = rl.DARKBLUE
         remote_operator_node.publish_trajectory_approval(False)
-        remote_operator_node.remote_operations_state = RemoteOperationStates.WaitingForTrajectory
+        remote_operator_node.remote_operations_state = RemoteOperationStates.CreatingWaypoints
+        remote_operator_node.waypoints.clear()
         remote_operator_node.has_received_a_new_trajectory = False
         button_was_clicked = True
 
