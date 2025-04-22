@@ -122,6 +122,7 @@ class SimulatedRemoteOperatorNode(Node):
 
             waypoint_msg.label = "remote operator waypoints"
             waypoint_msg.waypoints.append(point_to_send)
+            waypoint_msg.header.frame_id = "world"
 
         self.waypoint_publisher.publish(waypoint_msg)
 
